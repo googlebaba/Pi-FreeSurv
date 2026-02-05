@@ -6,7 +6,7 @@ from skglm.solvers import AndersonCD, ProxNewton # Assuming AndersonCD as the so
 from skglm.utils.jit_compilation import compiled_clone
 from sklearn.metrics import recall_score
 import sys
-from simulated_data_generation import SurvivalDataGenerator
+from Simulated_data_generation import SurvivalDataGenerator
 
 import heapq
 try:
