@@ -29,7 +29,7 @@ pip install -r requirements.txt
 
 - This takes several mins to build
 
-# Run demo
+# Running demo
 
 ## omics data
 
