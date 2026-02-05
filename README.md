@@ -34,6 +34,7 @@ pip install -r requirements.txt
 ## omics data
 
 **HCC dataset**
+```bash
 python3 Realdata_exps.py --dataset HCC --l1_lambda 0.05 --elastic_lambda=0.1 --FreeSurv_lambda 0.5
 
 **BreastCancer dataset**
