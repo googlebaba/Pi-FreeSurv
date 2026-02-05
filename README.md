@@ -16,6 +16,8 @@ numpy
 pandas
 scikit-learn
 torch
+skglm
+scikit-survival
 ```
 
 # Installation Guide
@@ -31,42 +33,22 @@ pip install -r requirements.txt
 
 ## omics data
 
-### FreeSurv
-python3 FreeSurv_HCC.py 0.5 #OS
-python3 FreeSurv_breast_cancer 1 1 # OS
-python3 FreeSurv_breast_cancer 1 0 # RFS
+**HCC dataset**
+python3 Realdata_exps.py --dataset HCC --l1_lambda 0.05 --elastic_lambda=0.1 --FreeSurv_lambda 0.5
 
-python3 FreeSurv_PDAC 0.2 1 # OS
-python3 FreeSurv_PDAC 0.2 0 # RFS
+**BreastCancer dataset**
+python3 Realdata_exps.py --dataset BreastCancer --l1_lambda 0.05 --elastic_lambda 0.1 --FreeSurv_lambda 1
 
-python3 FreeSurv_PBT 0.05  # OS
-
-### Cox lasso and Cox elasticnet
-python3 Cox_lasso_HCC.py 0.05 0.1 #OS
-
-python3 Cox_lasso_breast_cancer.py 0.05 0.1 1 #OS
-python3 Cox_lasso_breast_cancer.py 0.05 0.1 0 #RFS
-
-python3 Cox_lasso_PDAC 0.1 0.2 1 # OS
-python3 Cox_lasso_PDAC 0.1 0.2 0 # RFS
-
-python3 Cox_lasso_PBT 0.05 0.1  # OS
-
-
-
+**PDAC dataset**
+python3 Realdata_exps.py --dataset PDAC --l1_lambda 0.1 --elastic_lambda 0.2 --FreeSurv_lambda 0.2
 
 ## simulated data
 
-### FreeSurv
-python3 FreeSurv_syn.py Cox-additive 1 1000 1
+""Uncorrelated data""
+python3 Simulated_exps.py --exps_class uncorrelated --n_features 256 --n_samples 1000 --ind True --top_n_select 4 --mode Cox-additive --l1_lambda 0.1 --elastic_lambda 0.1 --FreeSurv_lambda 1
 
-python3 FreeSurv_syn_OOD.py Cox-additive 1000 1
-
-### Cox lasso and Cox elasticnet
-python3 Cox_syn_lasso.py Cox-additive 1 1000 0.1 0.1
-
-python3 Cox_syn_lasso_OOD.py Cox-additive 1000 0.01 0.01
-
+""Correlated data""
+python3 Simulated_exps.py --exps_class correlated --n_samples 1000 --ind True --top_n_select 4 --mode Cox-additive --l1_lambda 0.01 --elastic_lambda 0.01 --FreeSurv_lambda 1
 
 - The expected running time is from several seconds to mins depends on the number of samples.
 
