@@ -36,21 +36,27 @@ pip install -r requirements.txt
 **HCC dataset**
 ```bash
 python3 Realdata_exps.py --dataset HCC --l1_lambda 0.05 --elastic_lambda=0.1 --FreeSurv_lambda 0.5
-
+```
 **BreastCancer dataset**
+```bash
 python3 Realdata_exps.py --dataset BreastCancer --l1_lambda 0.05 --elastic_lambda 0.1 --FreeSurv_lambda 1
-
+```
 **PDAC dataset**
+```bash
 python3 Realdata_exps.py --dataset PDAC --l1_lambda 0.1 --elastic_lambda 0.2 --FreeSurv_lambda 0.2
+```
 
 ## simulated data
 
 ""Uncorrelated data""
+```bash
 python3 Simulated_exps.py --exps_class uncorrelated --n_features 256 --n_samples 1000 --ind True --top_n_select 4 --mode Cox-additive --l1_lambda 0.1 --elastic_lambda 0.1 --FreeSurv_lambda 1
+```
 
 ""Correlated data""
+```bash
 python3 Simulated_exps.py --exps_class correlated --n_samples 1000 --ind True --top_n_select 4 --mode Cox-additive --l1_lambda 0.01 --elastic_lambda 0.01 --FreeSurv_lambda 1
-
+```
 - The expected running time is from several seconds to mins depends on the number of samples.
 
 # License
