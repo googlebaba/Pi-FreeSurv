@@ -2,7 +2,7 @@ from Baselines import CoxFeatureSelector
 import argparse
 import numpy as np
 from TreeSurvival import RFSurvival
-from simulated_data_generation import SurvivalDataGenerator
+from Simulated_data_generation import SurvivalDataGenerator
 import pandas as pd
 from tqdm import tqdm
 from FreeSurv import FreeSurv
