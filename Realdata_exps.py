@@ -430,7 +430,7 @@ if __name__ == "__main__":
         "--dataset",
         type=str,
         default="HCC",
-        choices = ["HCC", "BreastCancer", "PDAC"]
+        choices = ["HCC", "BreastCancer", "PDAC"],
         help="the dataset"
     )
     parser.add_argument(
