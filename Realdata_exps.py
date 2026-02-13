@@ -93,7 +93,7 @@ def evaluate_with_bootstrap(model, df_train, df_test, duration_col, event_col, t
         'AUC_std': np.std(aucs) if aucs else 0
     }
 
-def run_HCC_experiments(l1_lambda, elastic_lambda, FreeSurv_lambda, seed=42):
+def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lambda, seed=42):
     if seed is not None: np.random.seed(seed)
 
     # 1. Data Loading
@@ -123,7 +123,7 @@ def run_HCC_experiments(l1_lambda, elastic_lambda, FreeSurv_lambda, seed=42):
 
     # AUC calculation time point (e.g., median of training event times)
     #train_events_time = datasets['train']['Y_vals'][datasets['train']['E_vals'] == 1]
-    time_points = 36 # np.percentile(train_events_time, [50])
+    time_points = time_points_auc # np.percentile(train_events_time, [50])
 
     # 2. Define Feature Selection Models
     selectors = {
