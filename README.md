@@ -40,7 +40,7 @@ python3 Realdata_exps.py --dataset HCC --l1_lambda 0.05 --elastic_lambda=0.1 --F
 
 **BreastCancer dataset**
 ```bash
-python3 Realdata_exps.py --dataset BreastCancer --l1_lambda 0.05 --elastic_lambda 0.1 --FreeSurv_lambda 1
+python3 Realdata_exps.py --dataset BreastCancer --l1_lambda 0.05 --time_points_auc 60 --elastic_lambda 0.1 --FreeSurv_lambda 1
 ```
 **PDAC dataset**
 ```bash
