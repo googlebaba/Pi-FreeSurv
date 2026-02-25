@@ -13,7 +13,7 @@ def run_experiment_uncorrelated(n_features, n_samples, ind, top_n_select, mode, 
     results = {
         'L1': {'sensitivity': [], 'specificity': []},
         'ElasticNet': {'sensitivity': [], 'specificity': []},
-        'FreeSurv': {'sensitivity': [], 'specificity': []}  # 新增
+        'FreeSurv': {'sensitivity': [], 'specificity': []} 
     }
 
     if seed is not None:
@@ -39,7 +39,7 @@ def run_experiment_uncorrelated(n_features, n_samples, ind, top_n_select, mode, 
         y_true_feature_labels[true_relevant_features_idx] = 1
 
         # --- Model 1: L1 Penalty (Top N) ---
-        cox_selector_l1 = CoxFeatureSelector(lambda1_l1=l1_lambda, verbose=True) # 设为 False 避免刷屏
+        cox_selector_l1 = CoxFeatureSelector(lambda1_l1=l1_lambda, verbose=True)
         cox_selector_l1.fit(X_uncorr, Y_uncorr, E_uncorr, penalty_type='L1', top_n=top_n_select, y_true_feature_labels=y_true_feature_labels)
         metrics_l1 = cox_selector_l1.get_selection_metrics(y_true_feature_labels)
 
@@ -95,7 +95,7 @@ def run_experiment_correlated(n_features, n_samples, ind, top_n_select, mode, l1
             'sensitivity': [], 'specificity': [], 
             'c_index_iid': [], 'c_index_ood': []
         },
-        'FreeSurv': {  # 新增 FreeSurv
+        'FreeSurv': {
             'sensitivity': [], 'specificity': [], 
             'c_index_iid': [], 'c_index_ood': []
         }
