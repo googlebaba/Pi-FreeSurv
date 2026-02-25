@@ -326,7 +326,7 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
             # Get sorted indices (descending order by absolute importance)
             sorted_indices = np.argsort(np.abs(importances))[::-1]
             
-            current_method_results = {'test':{}} # 存储当前方法在 test1/test2 上的结果
+            current_method_results = {'test':{}} 
 
             for top_n in top_Ns:
                 selected_idx = sorted_indices[:top_n]
@@ -380,27 +380,22 @@ def print_results_table(results):
     all_top_ns = sorted(list(next(iter(results.values()))['test1'].keys()))
     test_sets = sorted(list(next(iter(results.values())).keys()))
     
-    # 定义表格头部
     header = f"{'Method':<12} | {'Set':<6} | {'Metric':<10} | "
     for top_n in all_top_ns:
         header += f"{f'Top {top_n}':<24} | "
     print(header)
     print("-" * len(header))
 
-    # 遍历每个方法
     for method_name, method_data in results.items():
-        # 遍历每个测试集
         for set_name in test_sets:
-            # 打印 C-index 均值和标准差
             c_index_row = f"{method_name:<12} | {set_name:<6} | {'C-index':<10} | "
             for top_n in all_top_ns:
                 data = method_data[set_name].get(top_n, {})
                 mean = data.get('C-index_mean', np.nan)
                 std = data.get('C-index_std', np.nan)
-                c_index_row += f"{mean:.4f} \u00B1 {std:.4f}{'':<13} | " # \u00B1 是 ± 符号
+                c_index_row += f"{mean:.4f} \u00B1 {std:.4f}{'':<13} | " 
             print(c_index_row)
 
-            # 打印 AUC 均值和标准差
             auc_row = f"{'':<12} | {'':<6} | {'AUC':<10} | "
             for top_n in all_top_ns:
                 data = method_data[set_name].get(top_n, {})
