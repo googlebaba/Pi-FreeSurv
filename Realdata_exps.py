@@ -141,7 +141,7 @@ def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lam
     }
 
     final_results = {}
-    top_Ns = [5, 10, 20, 30, 40, 50]
+    top_Ns = [5, 10, 20, 30]
     
     # Print table header
     #print(f"{'Method':<12} | {'Set':<6} | {'Top N':<5} | {'C-index (Mean ± Std)':<25} | {'AUC (Mean ± Std)':<25}")
@@ -214,7 +214,7 @@ def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lam
                     duration_col=duration_col,
                     event_col=event_col,
                     times=time_points,
-                    n_bootstraps=100,
+                    n_bootstraps=1000,
                     seed=seed
                 )
 
@@ -250,7 +250,7 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
 
     # Outcome -> Method -> Set -> Top N -> Metrics
     final_results = {} 
-    top_Ns = [5, 10, 20, 30, 40, 50]
+    top_Ns = [5, 10, 20, 30]
     datasets = {}
     # --- (OS, RFS) ---
     for outcome_name, outcome_cols in survival_outcomes.items():
@@ -352,7 +352,7 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
                         duration_col=duration_col,
                         event_col=event_col,
                         times=time_points_auc,
-                        n_bootstraps=100, 
+                        n_bootstraps=1000, 
                         seed=seed
                     )
                     
