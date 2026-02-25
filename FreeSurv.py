@@ -258,8 +258,9 @@ class FreeSurv:
         self.feature_importances_ = np.abs(self.z_)
         self.y_pred_binary, self.selected_indices_ = self._mark_top_n_features(list(self.feature_importances_)) # Descending order
         count_zero = len(list(self.feature_importances_))-list(self.feature_importances_).count(0)
-        print(f"[FreeSurv] Number of features with non-zero coefficients: {count_zero}")
-        # Return z directly for convenience
+
+        if self.verbose:
+            print(f"[FreeSurv] Number of features with non-zero coefficients: {count_zero}")
         return self.z_
 
 

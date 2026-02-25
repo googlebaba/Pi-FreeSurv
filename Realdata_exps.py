@@ -2,7 +2,6 @@ from Baselines import CoxFeatureSelector
 import argparse
 import numpy as np
 from TreeSurvival import RFSurvival
-from Simulated_data_generation import SurvivalDataGenerator
 import pandas as pd
 from tqdm import tqdm
 from FreeSurv import FreeSurv
@@ -97,10 +96,10 @@ def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lam
     if seed is not None: np.random.seed(seed)
 
     # 1. Data Loading
-    data_loader = Data()
     duration_col = "Survival.months"
     event_col = "Survival.status"
 
+    data_loader = Data(data_name="HCC", duration_col = "Survival.months", event_col = "Survival.status")
     datasets = {}
     # Load train, test1, test2
     for set_name in ["train", "test1", "test2"]:
@@ -142,7 +141,7 @@ def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lam
     }
 
     final_results = {}
-    top_Ns = [5, 10, 20, 30]
+    top_Ns = [5, 10, 20, 30, 40, 50]
     
     # Print table header
     #print(f"{'Method':<12} | {'Set':<6} | {'Top N':<5} | {'C-index (Mean ± Std)':<25} | {'AUC (Mean ± Std)':<25}")
@@ -161,7 +160,7 @@ def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lam
         scaler = StandardScaler()
         # X_train_raw is initially a numpy array, but later we reconstruct a DataFrame from it.
         # It's generally better to scale the X_vals (numpy array) that are passed to fit methods.
-        X_train_scaled_for_selector = scaler.fit_transform(X_train_raw)
+        X_train_scaled_for_selector = X_train_raw
 
         # Train the selector
         if method_name == 'FreeSurv':
@@ -188,7 +187,7 @@ def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lam
             # 2. Helper function to construct subset DataFrame
             def get_subset_df(set_name, indices):
                 # Apply the same scaler to test sets
-                X_scaled = scaler.transform(datasets[set_name]['X_vals'])
+                X_scaled = datasets[set_name]['X_vals'] #scaler.transform(datasets[set_name]['X_vals'])
                 df_scaled = pd.DataFrame(X_scaled, columns=feature_cols) # Reconstruct DF with scaled features
                 
                 # Select feature columns by integer index from the scaled DataFrame
@@ -215,7 +214,7 @@ def run_HCC_experiments(l1_lambda, time_points_auc, elastic_lambda, FreeSurv_lam
                     duration_col=duration_col,
                     event_col=event_col,
                     times=time_points,
-                    n_bootstraps=1000,
+                    n_bootstraps=100,
                     seed=seed
                 )
 
@@ -251,7 +250,7 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
 
     # Outcome -> Method -> Set -> Top N -> Metrics
     final_results = {} 
-    top_Ns = [5, 10, 20, 30]
+    top_Ns = [5, 10, 20, 30, 40, 50]
     datasets = {}
     # --- (OS, RFS) ---
     for outcome_name, outcome_cols in survival_outcomes.items():
@@ -259,11 +258,12 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
         duration_col = outcome_cols['duration_col']
         event_col = outcome_cols['event_col']     
 
-        data_loader=Data() # Pass an instance of your Data class
+        data_loader=Data(data_name = data_name, outcome=outcome_name, duration_col=duration_col, event_col=event_col) # Pass an instance of your Data class
         datasets[outcome_name] = {}
         # Load train, test1, test2
         for set_name in ["train", "test"]:
             Y, E, X = data_loader.get_data(data_name=data_name, set_name=set_name, duration_col=duration_col, event_col=event_col, outcome=outcome_name)
+
 
             # Convert to DataFrame and merge labels
             df = pd.DataFrame(X)
@@ -272,7 +272,6 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
 
             df[duration_col] = Y
             df[event_col] = E
-
             datasets[outcome_name][set_name] = {
                 'df': df,
                 'X_vals': X, # Original numerical matrix, for feature selector fit
@@ -284,15 +283,15 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
 
         selectors = {
             'L1': (
-                CoxFeatureSelector(lambda1_l1=l1_lambda, verbose=False),
+                CoxFeatureSelector(lambda1_l1=l1_lambda, verbose=True),
                 {'penalty_type': 'L1'}
             ),
             'ElasticNet': (
-                CoxFeatureSelector(alpha_elastic=elastic_lambda, l1_ratio_elastic=0.5, verbose=False),
+                CoxFeatureSelector(alpha_elastic=elastic_lambda, l1_ratio_elastic=0.5, verbose=True),
                 {'penalty_type': 'elastic'}
             ),
             'FreeSurv': (
-                FreeSurv(alpha=FreeSurv_lambda, verbose=False),
+                FreeSurv(alpha=FreeSurv_lambda, verbose=True),
                 {}
             )
         }
@@ -307,10 +306,15 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
             X_train_for_selector = datasets[outcome_name]['train']['X_vals']
             Y_train_vals = datasets[outcome_name]['train']['Y_vals']
             E_train_vals = datasets[outcome_name]['train']['E_vals']
-            
+
+            scaler = StandardScaler()
+            #X_train_for_selector = scaler.fit_transform(X_train_for_selector)
+
+           
             # Note: StandardScaler is now applied inside load_and_preprocess_breast_cancer
             # So X_train_for_selector is already scaled. No need to re-scale here.
-            
+
+
             # Train the selector
             if method_name == 'FreeSurv':
                 model.fit(X_train_for_selector, np.array(Y_train_vals), np.array(E_train_vals))
@@ -348,7 +352,7 @@ def run_breast_cancer_experiments(data_name, time_points_auc, l1_lambda, elastic
                         duration_col=duration_col,
                         event_col=event_col,
                         times=time_points_auc,
-                        n_bootstraps=1000, 
+                        n_bootstraps=100, 
                         seed=seed
                     )
                     
